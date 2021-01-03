@@ -66,31 +66,58 @@ public class ServeurMultiThread {
                 content = buffin.readLine();
                 //  System.out.println(content);
 
-                if(content.equals("1")){
-                    System.out.println("genre = 1");
-                    genre = 1;
+                switch (content){
+                    case "1" :
+                        genre =1;
+                        break;
+                    case "2":
+                        genre=2;
+                        break;
+                    case "3":
+                        genre = 3;
+                        break;
+                    default:
+                        System.out.println("Please select a gender");
                 }
-                else if(content.equals("2")){
-                    System.out.println("genre = 2");
-                    genre = 2;
-                }
-                else if (content.equals("3")){
-                    System.out.println("genre = 3");
-                    genre = 3;
-                }
+//                if(content.equals("1")){
+//                    System.out.println("genre = 1");
+//                    genre = 1;
+//                }
+//                else if(content.equals("2")){
+//                    System.out.println("genre = 2");
+//                    genre = 2;
+//                }
+//                else if (content.equals("3")){
+//                    System.out.println("genre = 3");
+//                    genre = 3;
+//                }
                 pout = new PrintWriter(clientSocket.getOutputStream());
                 content = buffin.readLine();
                 // System.out.println(content);
 
-                if(content.equals("1")){
-                    song = 1;
+                switch (content){
+                    case "1" :
+                        song =1;
+                        break;
+                    case "2":
+                        song=2;
+                        break;
+                    case "3":
+                        song = 3;
+                        break;
+                    default:
+                        System.out.println("Please select a song");
                 }
-                else if(content.equals("2")){
-                    song = 2;
-                }
-                else if (content.equals("3")){
-                    song = 3;
-                }
+
+//                if(content.equals("1")){
+//                    song = 1;
+//                }
+//                else if(content.equals("2")){
+//                    song = 2;
+//                }
+//                else if (content.equals("3")){
+//                    song = 3;
+//                }
                 System.out.println(listMusique[genre-1][song-1]);
 
                 Thread t = new Thread(new AcceptClientD(clientSocket,ClientNo, genre, song));
