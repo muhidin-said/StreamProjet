@@ -7,11 +7,10 @@ import java.util.Scanner;
 
 public class Client {
 
-
     protected String[][] listMusique = new String[][]
-            {{"J-Balvin - Reggaeton", "Eddy Lover y El Roockie - OlvieDemos", "Ozuna - Mi-Nina"},
-                    {"2pac - Changes", "50 Cent - Best Friends", "Pop Smoke - Dior"},
-                    {"Bon Jovi - Livin' On A Prayer", "Nirvana - Smells Like Teen Spirit ", "Queen - We Will Rock You"}};
+             {{"j-balvin-reggaeton", "eddy-lover-y-el-roockie-olvidemos", "Ozuna-Mi-Nina"},
+                        {"2pac-changes", "50-cent-best-friend", "Pop-Smoke-Dior"},
+                        {"bon-jovi-livin-on-a-prayer", "nirvana-smells-like-teen-spirit", "queen-we-will-rock-you"}};
 
     public static void main(String[] args) {
         int choice;
@@ -24,10 +23,7 @@ public class Client {
         PrintWriter pout;
         InetAddress serverAddress;
         String serverName = "127.0.0.1";
-        String[][] listMusique = new String[][]
-                {{"j-balvin-reggaeton", "eddy-lover-y-el-roockie-olvidemos", "Ozuna-Mi-Nina"},
-                        {"2pac-changes", "50-cent-best-friend", "Pop-Smoke-Dior"},
-                        {"bon-jovi-livin-on-a-prayer", "nirvana-smells-like-teen-spirit", "queen-we-will-rock-you"}};
+
 
         Client c = new Client();
         try {
@@ -47,65 +43,53 @@ public class Client {
 
             System.out.println("Que voulez-vous faire ?\n "+
                     "1: Écouter de la musique\n " +
-                    "2: Écouter la playlist d'une autre personne \n" +
-                    " 3: Quitter");
-
-            choice = saisie.nextInt();
-        if (choice == 2){
-            pout = new PrintWriter(mySocket.getOutputStream());
-            pout.println(choice);
-            pout.flush();
-            System.out.println("Choissisez la playlist d'une personne :");
-            buffin = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-
-            while((message = buffin.readLine()) != null) {
-                System.out.println(message);
-            }
-
-        }
-        else if (choice == 3){
-
-        }
-        else if (choice == 1) {
-            c.ListenSong(choice, mySocket);
-            InputStream is = mySocket.getInputStream();
-            InputStream bufferedIn = new BufferedInputStream(is);
-            SimpleAudioPlayer player = new SimpleAudioPlayer(bufferedIn);
-            player.play();
-            c.PlayAudio(player);
-
-        }
-
-            System.out.println("Voulez-vous écouter une autre musique ou écouter la playlist d'un client ? \n" +
-                    "1: Écouter une autre musique\n" +
-                    "2: Écouter la playlist d'un client\n" +
+                    "2: Écouter la playlist d'une autre personne \n " +
                     "3: Quitter");
 
             choice = saisie.nextInt();
-            if (choice == 2){
-                pout = new PrintWriter(mySocket.getOutputStream());
-                pout.println(choice);
-                pout.flush();
-                System.out.println("Voici la playlist d'un (des) client(s) :");
-                buffin = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
-                while((message = buffin.readLine()) != null) {
-                    System.out.println(message);
-                }
-                System.out.println("Choissez la playlist a écouter :");
+            switch (choice){
+                case 1:
+                    c.ListenSong(choice, mySocket);
+                    InputStream is = mySocket.getInputStream();
+                    InputStream bufferedIn = new BufferedInputStream(is);
+                    SimpleAudioPlayer player = new SimpleAudioPlayer(bufferedIn);
+                    player.play();
+                    c.PlayAudio(player, mySocket);
+                    break;
+                case 2:
+                    pout = new PrintWriter(mySocket.getOutputStream());
+                    pout.println(choice);
+                    pout.flush();
+                    System.out.println("Voici la playlist d'un (des) client(s) :");
+                    System.out.println("Choisissez la playlist à écouter :");
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
-            }
-            else if (choice == 3){
 
-            }
-            else if (choice == 1) {
-                c.ListenSong(choice, mySocket);
-                InputStream is = mySocket.getInputStream();
-                InputStream bufferedIn = new BufferedInputStream(is);
-                SimpleAudioPlayer player = new SimpleAudioPlayer(bufferedIn);
-                player.play();
-                c.PlayAudio(player);
+                    while ((message = buffer.readLine()) != null) {
+                        System.out.println(message);
+                        sleep(buffer);
+                        if(!buffer.ready())
+                            break;
+                    }
 
+                    System.out.print("choice : ");
+                    choice = saisie.nextInt();
+                    pout = new PrintWriter(mySocket.getOutputStream());
+                    pout.println(choice);
+                    pout.flush();
+                    is = mySocket.getInputStream();
+                    bufferedIn = new BufferedInputStream(is);
+                    player = new SimpleAudioPlayer(bufferedIn);
+                    player.play();
+                    c.PlayAudio(player, mySocket);
+
+                    break;
+                case 3:
+                    mySocket.close();
+                    break;
+                default:
+                    System.out.println("Not a Valid response");
             }
 
 
@@ -115,31 +99,6 @@ public class Client {
             //get an output stream to send data to the server
             pout = new PrintWriter(mySocket.getOutputStream());
 
-           // int filesize = 722676;
-
-           // byte[] mybytearray = new byte[filesize];
-
-
-            int play = 1;
-/*
-            if (play == 0) {
-                // save in a file
-                int current = 0;
-                int bytesRead = 0;
-                FileOutputStream fos = new FileOutputStream("C:\\test\\cv.pdf");
-                BufferedOutputStream bos = new BufferedOutputStream(fos);
-                do {
-                    bytesRead = is.read(mybytearray, current, mybytearray.length - current);
-                    if (bytesRead >= 0)
-                        current += bytesRead;
-                } while (bytesRead > -1);
-
-                System.out.println("I read : " + current + " bytes");
-                bos.write(mybytearray, 0, mybytearray.length);
-                bos.flush();
-                bos.close();
-            } else { */
-                // play the stream
 
 
             mySocket.close();
@@ -251,7 +210,7 @@ public class Client {
             }
         }
     }
-    public void PlayAudio(SimpleAudioPlayer player) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+    public void PlayAudio(SimpleAudioPlayer player, Socket mySocket ) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         Scanner scanner = new Scanner(System.in);
         String response = "";
 
@@ -268,13 +227,21 @@ public class Client {
                     break;
                 case ("S"): player.pause();
                     break;
-                case ("R"): player.resetAudioStream();
+                case ("Q"): mySocket.close();
                     break;
                 default: System.out.println("Not a valid response");
             }
 
         }
         System.out.println("Byeeee!");
+    }
+    private static void sleep(BufferedReader in) throws IOException {
+        long time = System.currentTimeMillis();
+        while(System.currentTimeMillis()-time < 1000){
+            if(in.ready()){
+                break;
+            }
+        }
     }
 }
 
