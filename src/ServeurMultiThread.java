@@ -7,8 +7,8 @@ import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
+
 
 public class ServeurMultiThread {
     public static void main(String[] args){
